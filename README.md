@@ -1,18 +1,24 @@
 # FSI Skills
 
-A 股数据分析 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) Skills 集合，基于 [FSI](fsi-pkg/)（Financial Stock Intelligence）。
+用自然语言和 Claude 聊天就能完成 A 股数据分析 — 拉数据、看指标、盯盘、画图、数浪，全部自动搞定。
 
-**完全自包含** — FSI 源码已打包在 `fsi-pkg/` 中，无需外部依赖。
+**FSI Skills** 是一套 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) Skills，基于 [FSI](fsi-pkg/)（Financial Stock Intelligence）构建。它让 Claude 理解你的股市分析意图，自动调用正确的工具完成任务。你只需要像平时聊天一样说话：
 
-## Skills 列表
+- "帮我看看茅台的技术指标" → 自动拉取数据、计算 MACD/KDJ/RSI/布林带，给出趋势判断
+- "今天大盘怎么样？" → 根据当前时段自动选择盘前/盘中/盘后分析
+- "对比一下银行股，哪个更强？" → 多维度对比 + AI 排名
 
-| Skill | 功能 | 触发场景 |
-|-------|------|----------|
-| **fsi-fetch** | 数据拉取 | 拉取股票列表、日线、财报、全量同步 |
-| **fsi-analysis** | 综合分析 | 技术指标、综合报告、多股对比、条件筛选、新闻、财报 |
-| **fsi-market** | 市场总览 | 盘前/盘中/盘后、热点快讯、新闻回顾、资金流向 |
-| **fsi-chart** | K 线图表 | 生成个股/指数/ETF K 线图和分时图 |
-| **fsi-wave** | 波浪分析 | Elliott 波浪理论分析，浪型识别 |
+**完全自包含** — FSI 源码已打包在 `fsi-pkg/` 中，一键安装，无需外部依赖。数据来源涵盖 AKShare、Yahoo Finance、腾讯行情等多个源，自动选择最优可用源。
+
+## 核心能力
+
+| Skill | 功能 | 你可以这样说 |
+|-------|------|-------------|
+| **fsi-fetch** | 数据拉取与同步 | "拉一下平安银行的数据"、"同步全量数据"、"检测数据源" |
+| **fsi-analysis** | 技术分析与综合报告 | "看看茅台技术指标"、"出份报告"、"对比这几只股票"、"筛选超卖股" |
+| **fsi-market** | 市场全时段覆盖 | "今天大盘怎么样"、"盘前看看"、"有什么新闻"、"资金流向" |
+| **fsi-chart** | K 线图与分时图 | "画个 K 线图"、"看看走势"、"分时图" |
+| **fsi-wave** | Elliott 波浪分析 | "现在第几浪"、"波浪结构分析" |
 
 ## 系统要求
 
