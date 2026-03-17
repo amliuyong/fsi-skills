@@ -25,6 +25,7 @@
 
 - Python >= 3.11
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+- AWS 账号（AI 分析功能需要 Amazon Bedrock 访问权限）
 - 网络连接（用于拉取行情数据）
 
 ## 安装
@@ -160,13 +161,52 @@ fsi-skills/
 
 ## 数据存储
 
-所有数据存储在 `~/.fsi/data/market_data.duckdb`（DuckDB），5 个 skills 共享同一数据库。
+所有数据存储在 `~/.fsi/data/market_data.duckdb`（DuckDB），6 个 skills 共享同一数据库。
 
 首次使用建议按顺序初始化：
 1. **检测网络** — `check-network`，检测数据源可用性
 2. **拉取列表** — `list`，全市场 A 股列表
 3. **拉取指数** — `indices`，6 大主要指数日线
 4. **拉取个股** — `stock` 或 `stock_all`，目标个股数据
+
+## AI 分析配置
+
+FSI 的 AI 分析功能（技术面点评、新闻情感分析、综合报告等）通过 **Amazon Bedrock** 调用 Claude 模型。
+
+### AWS Profile 配置
+
+1. 确保已安装并配置 [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)：
+
+```bash
+# 配置一个 named profile（示例名 my_bedrock）
+aws configure --profile my_bedrock
+# 输入 Access Key、Secret Key、Region（如 us-east-1 或 ap-northeast-1）
+```
+
+2. 确保该 profile 有 Bedrock 的 `InvokeModel` 权限，并已在对应 region 开通 Claude 模型访问。
+
+### 自定义配置（可选）
+
+创建 `~/.fsi/aws-config.json` 可自定义模型和 profile：
+
+```json
+{
+  "model": "anthropic.claude-sonnet-4-20250514",
+  "max_tokens": 8192,
+  "profiles": [
+    {"profile_name": "my_bedrock", "region": "us-east-1"},
+    {"profile_name": "my_bedrock_jp", "region": "ap-northeast-1"}
+  ]
+}
+```
+
+| 字段 | 默认值 | 说明 |
+|------|--------|------|
+| `model` | `global.anthropic.claude-opus-4-6-v1` | Bedrock 模型 ID |
+| `max_tokens` | `8192` | 最大输出 token |
+| `profiles` | 内置多 profile | AWS named profile + region 列表，随机选择 + 失败重试 |
+
+> **不配置 aws-config.json 也可以使用**，脚本会使用内置默认 profile。如果默认 profile 不匹配你的 AWS 环境，创建此文件覆盖即可。
 
 ## License
 
