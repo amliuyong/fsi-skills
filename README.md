@@ -31,8 +31,21 @@ bash install.sh
 `install.sh` 会自动：
 1. 创建 Python 虚拟环境（`.venv/`）
 2. 从本地 `fsi-pkg/` 安装 FSI 及所有依赖
-3. 复制所有 skills 到 `~/.claude/skills/`
-4. 记录 venv 路径供 skills 脚本使用
+3. 交互式选择安装位置（全局 or 当前项目）
+4. 复制所有 skills 并记录 venv 路径
+
+安装时会提示选择：
+
+```
+请选择 Skills 安装位置：
+  1) 全局安装 → ~/.claude/skills/（所有项目共享）
+  2) 项目安装 → 当前目录 .claude/skills/（仅当前项目）
+```
+
+| 选项 | 安装位置 | 作用范围 |
+|------|----------|----------|
+| 1 | `~/.claude/skills/` | 全局，所有项目共享 |
+| 2 | `.claude/skills/` | 仅当前项目可用 |
 
 > **提示**：如果使用 SSH 方式克隆，可替换为：
 > ```bash

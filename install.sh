@@ -6,11 +6,23 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 VENV_DIR="$SCRIPT_DIR/.venv"
-SKILLS_DIR="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
 
 info()  { echo -e "\033[1;34m[INFO]\033[0m $*"; }
 ok()    { echo -e "\033[1;32m[OK]\033[0m $*"; }
 error() { echo -e "\033[1;31m[ERROR]\033[0m $*"; exit 1; }
+
+# ─── 选择安装位置 ───
+echo ""
+echo "请选择 Skills 安装位置："
+echo "  1) 全局安装 → ~/.claude/skills/（所有项目共享）"
+echo "  2) 项目安装 → 当前目录 .claude/skills/（仅当前项目）"
+echo ""
+read -rp "请输入 1 或 2 [默认 1]: " choice
+case "${choice:-1}" in
+    1) SKILLS_DIR="$HOME/.claude/skills" ;;
+    2) SKILLS_DIR="$(pwd)/.claude/skills" ;;
+    *) error "无效选择：$choice" ;;
+esac
 
 # ─── Python ───
 PYTHON=""
