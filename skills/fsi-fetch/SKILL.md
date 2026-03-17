@@ -51,10 +51,13 @@ python3 {baseDir}/scripts/fsi_fetch.py --action stock_all --codes 600938 601398
 
 新环境建议按以下顺序初始化：
 
-1. `check-network` — 检测各数据源（AKShare/Yahoo/Tencent 等）可用性，生成 `~/.fsi/data/api_health.json`
-2. `list` — 拉取全市场 A 股列表
-3. `indices` — 拉取 6 大主要指数日线
-4. `stock` 或 `stock_all` — 拉取目标个股数据
+1. `list` — 拉取全市场 A 股列表
+2. `indices` — 拉取 6 大主要指数日线
+3. `stock` 或 `stock_all` — 拉取目标个股数据
+
+> **关于 `check-network`**：只在数据拉取异常（如某个源超时/报错）时才需要运行。
+> 它会检测所有数据源并生成 `~/.fsi/data/api_health.json`，耗时较长（需要逐个测试各源），
+> 不要在每次 fetch 前自动运行。
 
 ## 意图识别
 

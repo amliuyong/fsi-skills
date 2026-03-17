@@ -127,7 +127,13 @@ if [ "$NEED_CLEANUP" = true ]; then
 fi
 
 echo ""
-ok "完成！在 Claude Code 中试试："
-echo "  > 帮我看看 000001 的技术指标"
-echo "  > 今天大盘怎么样？"
+ok "安装完成！"
+echo ""
+echo "  首次使用建议先检测数据源（约 1-2 分钟）："
+echo "    source ~/.fsi/venv/bin/activate"
+echo "    fsi check-network"
+echo ""
+echo "  然后在 Claude Code 中试试："
+echo "    > 帮我看看 000001 的技术指标"
+echo "    > 今天大盘怎么样？"
 echo ""
