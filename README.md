@@ -31,7 +31,7 @@
 一行命令，无需 git clone，无残留文件：
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/amliuyong/fsi-skills/main/install.sh | bash
+bash <(curl -sSL https://raw.githubusercontent.com/amliuyong/fsi-skills/main/install.sh)
 ```
 
 脚本会自动：
