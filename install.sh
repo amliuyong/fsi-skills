@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # FSI Skills 一键安装
 # 1. 在 repo 内创建 .venv 并安装 FSI
-# 2. 复制 skills 到 ~/.claude/skills/
+# 2. 安装 skills（全局复制 / 项目级 symlink）
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 VENV_DIR="$SCRIPT_DIR/.venv"
+SKILLS_SRC="$SCRIPT_DIR/skills"
 
 info()  { echo -e "\033[1;34m[INFO]\033[0m $*"; }
 ok()    { echo -e "\033[1;32m[OK]\033[0m $*"; }
@@ -14,14 +15,15 @@ error() { echo -e "\033[1;31m[ERROR]\033[0m $*"; exit 1; }
 # ─── 选择安装位置 ───
 echo ""
 echo "请选择 Skills 安装位置："
-echo "  1) 全局安装 → ~/.claude/skills/（所有项目共享）"
-echo "  2) 项目安装 → 当前目录 .claude/skills/（仅当前项目）"
+echo "  1) 全局安装 → ~/.claude/skills/（所有项目共享，复制文件）"
+echo "  2) 项目安装 → 当前目录 .claude/skills/（仅当前项目，symlink）"
 echo ""
 read -rp "请输入 1 或 2 [默认 1]: " choice
-case "${choice:-1}" in
+INSTALL_MODE="${choice:-1}"
+case "$INSTALL_MODE" in
     1) SKILLS_DIR="$HOME/.claude/skills" ;;
     2) SKILLS_DIR="$(pwd)/.claude/skills" ;;
-    *) error "无效选择：$choice" ;;
+    *) error "无效选择：$INSTALL_MODE" ;;
 esac
 
 # ─── Python ───
@@ -54,12 +56,24 @@ info "安装 Skills → $SKILLS_DIR"
 mkdir -p "$SKILLS_DIR"
 
 count=0
-for skill_dir in "$SCRIPT_DIR"/fsi-*/; do
+for skill_dir in "$SKILLS_SRC"/fsi-*/; do
     [ ! -f "$skill_dir/SKILL.md" ] && continue
     skill_name="$(basename "$skill_dir")"
-    cp -r "$skill_dir" "$SKILLS_DIR/"
-    chmod +x "$SKILLS_DIR/$skill_name"/scripts/*.py 2>/dev/null || true
-    ok "  $skill_name"
+    target="$SKILLS_DIR/$skill_name"
+
+    # 清理旧的安装（无论是文件还是 symlink）
+    rm -rf "$target"
+
+    if [ "$INSTALL_MODE" = "2" ]; then
+        # 项目级：symlink，修改实时生效
+        ln -s "$skill_dir" "$target"
+        ok "  $skill_name → symlink"
+    else
+        # 全局：复制文件
+        cp -r "$skill_dir" "$target"
+        chmod +x "$target"/scripts/*.py 2>/dev/null || true
+        ok "  $skill_name → copied"
+    fi
     count=$((count + 1))
 done
 ok "$count 个 skills 已安装"

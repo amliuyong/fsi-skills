@@ -48,10 +48,10 @@ bash install.sh
   2) 项目安装 → 当前目录 .claude/skills/（仅当前项目）
 ```
 
-| 选项 | 安装位置 | 作用范围 |
-|------|----------|----------|
-| 1 | `~/.claude/skills/` | 全局，所有项目共享 |
-| 2 | `.claude/skills/` | 仅当前项目可用 |
+| 选项 | 安装位置 | 方式 | 作用范围 |
+|------|----------|------|----------|
+| 1 | `~/.claude/skills/` | 复制文件 | 全局，所有项目共享 |
+| 2 | `.claude/skills/` | symlink | 仅当前项目，修改实时生效 |
 
 > **提示**：如果使用 SSH 方式克隆，可替换为：
 > ```bash
@@ -64,8 +64,11 @@ bash install.sh
 # 先安装 FSI
 pip install ./fsi-pkg
 
-# 再复制需要的 skill
-cp -r fsi-chart ~/.claude/skills/
+# 复制到全局
+cp -r skills/fsi-chart ~/.claude/skills/
+
+# 或 symlink 到项目
+ln -s "$(pwd)/skills/fsi-chart" .claude/skills/fsi-chart
 ```
 
 ### 验证安装
@@ -86,21 +89,22 @@ fsi-skills/
 ├── fsi-pkg/                # FSI 源码（自包含）
 │   ├── pyproject.toml
 │   └── src/fsi/
-├── fsi-fetch/              # 数据拉取
-│   ├── SKILL.md
-│   └── scripts/fsi_fetch.py
-├── fsi-analysis/           # 综合分析
-│   ├── SKILL.md
-│   └── scripts/fsi_analysis.py
-├── fsi-market/             # 市场总览
-│   ├── SKILL.md
-│   └── scripts/fsi_market.py
-├── fsi-chart/              # K 线图表
-│   ├── SKILL.md
-│   └── scripts/fsi_chart.py
-└── fsi-wave/               # 波浪分析
-    ├── SKILL.md
-    └── scripts/fsi_wave.py
+└── skills/                 # 所有 Skills
+    ├── fsi-fetch/          # 数据拉取
+    │   ├── SKILL.md
+    │   └── scripts/fsi_fetch.py
+    ├── fsi-analysis/       # 综合分析
+    │   ├── SKILL.md
+    │   └── scripts/fsi_analysis.py
+    ├── fsi-market/         # 市场总览
+    │   ├── SKILL.md
+    │   └── scripts/fsi_market.py
+    ├── fsi-chart/          # K 线图表
+    │   ├── SKILL.md
+    │   └── scripts/fsi_chart.py
+    └── fsi-wave/           # 波浪分析
+        ├── SKILL.md
+        └── scripts/fsi_wave.py
 ```
 
 ## 使用示例

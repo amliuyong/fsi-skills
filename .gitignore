@@ -12,8 +12,8 @@ build/
 .agents/
 .claude/
 .kiro/
-skills/
 skills-lock.json
+skills/skill-creator/
 
 # OS
 .DS_Store
