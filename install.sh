@@ -94,6 +94,32 @@ ok "$count 个 skills 已安装"
 echo "$VENV_DIR" > "$SKILLS_DIR/.fsi-venv-path"
 ok "venv 路径已记录"
 
+# ─── 配置 AWS Bedrock（AI 分析） ───
+AWS_CONFIG="$FSI_HOME/aws-config.json"
+if [ -f "$AWS_CONFIG" ]; then
+    ok "aws-config.json 已存在，跳过"
+else
+    echo ""
+    info "配置 AI 分析（Amazon Bedrock + Claude）"
+    read -rp "AWS Profile 名称 [默认 default]: " aws_profile
+    aws_profile="${aws_profile:-default}"
+    read -rp "AWS Region [默认 us-east-1]: " aws_region
+    aws_region="${aws_region:-us-east-1}"
+
+    cat > "$AWS_CONFIG" <<AWSEOF
+{
+  "model": "global.anthropic.claude-opus-4-6-v1",
+  "max_tokens": 8192,
+  "profiles": [
+    {"profile_name": "$aws_profile", "region": "$aws_region"}
+  ]
+}
+AWSEOF
+    ok "aws-config.json 已创建: $AWS_CONFIG"
+    echo "    profile: $aws_profile, region: $aws_region"
+    echo "    如需修改，编辑 $AWS_CONFIG"
+fi
+
 # ─── 清理临时文件 ───
 if [ "$NEED_CLEANUP" = true ]; then
     rm -rf "$TMP_DIR"

@@ -41,7 +41,8 @@ bash <(curl -sSL https://raw.githubusercontent.com/amliuyong/fsi-skills/main/ins
 2. 创建 Python 虚拟环境（`~/.fsi/venv/`）
 3. 安装 FSI 及所有依赖
 4. 交互式选择安装位置 → 复制 skills
-5. 清理临时文件，不留任何残留
+5. 配置 AWS Bedrock（询问 profile 和 region，生成 `~/.fsi/aws-config.json`）
+6. 清理临时文件，不留任何残留
 
 安装时会提示选择：
 
@@ -173,32 +174,29 @@ fsi-skills/
 
 FSI 的 AI 分析功能（技术面点评、新闻情感分析、综合报告等）通过 **Amazon Bedrock** 调用 Claude 模型。
 
-### 第一步：配置 AWS Profile
+### 前置条件
 
-安装并配置 [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)，创建一个有 Bedrock 权限的 named profile：
+安装并配置 [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)，确保有一个可用的 AWS profile：
 
 ```bash
-aws configure --profile my_bedrock
-# 输入 Access Key、Secret Key、Region（推荐 us-east-1 或 ap-northeast-1）
+aws configure                        # 配置 default profile
+# 或
+aws configure --profile my_bedrock   # 配置 named profile
 ```
 
 确保该 profile 有 Bedrock 的 `InvokeModel` 权限，并已在对应 region [开通 Claude 模型访问](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html)。
 
-### 第二步：创建 aws-config.json
+### 自动配置
 
-创建 `~/.fsi/aws-config.json`，告诉 FSI 使用哪个 profile 和模型：
+`install.sh` 安装时会自动询问并生成 `~/.fsi/aws-config.json`：
 
-```json
-{
-  "model": "global.anthropic.claude-opus-4-6-v1",
-  "max_tokens": 8192,
-  "profiles": [
-    {"profile_name": "my_bedrock", "region": "us-east-1"}
-  ]
-}
+```
+配置 AI 分析（Amazon Bedrock + Claude）
+AWS Profile 名称 [默认 default]:
+AWS Region [默认 us-east-1]:
 ```
 
-> **这一步是必须的**，否则 AI 分析功能无法工作。
+直接回车即使用默认值（profile=`default`，region=`us-east-1`）。
 
 | 字段 | 说明 |
 |------|------|
