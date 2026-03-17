@@ -97,7 +97,7 @@ ok "venv 路径已记录"
 # ─── 配置 AWS Bedrock（AI 分析） ───
 AWS_CONFIG="$FSI_HOME/aws-config.json"
 if [ -f "$AWS_CONFIG" ]; then
-    ok "aws-config.json 已存在，跳过"
+    ok "aws-config.json 已存在: $AWS_CONFIG，跳过"
 else
     echo ""
     info "配置 AI 分析（Amazon Bedrock + Claude）"
