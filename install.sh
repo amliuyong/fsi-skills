@@ -33,12 +33,12 @@ echo "请选择 Skills 安装位置："
 echo "  1) 全局安装 → ~/.claude/skills/（所有项目共享）"
 echo "  2) 项目安装 → 指定项目目录 .claude/skills/（仅该项目）"
 echo ""
-read -rp "请输入 1 或 2 [默认 1]: " choice
+read -rp "请输入 1 或 2 [默认 1]: " choice </dev/tty
 INSTALL_MODE="${choice:-1}"
 case "$INSTALL_MODE" in
     1) SKILLS_DIR="$HOME/.claude/skills" ;;
     2)
-        read -rp "请输入项目路径 [默认当前目录]: " project_path
+        read -rp "请输入项目路径 [默认当前目录]: " project_path </dev/tty
         project_path="${project_path:-.}"
         project_path="$(cd "$project_path" 2>/dev/null && pwd)" || error "路径不存在：$project_path"
         SKILLS_DIR="$project_path/.claude/skills"
