@@ -89,7 +89,7 @@ def collect_now_data(verbose=False):
 @click.command("now")
 @click.pass_context
 def now_cmd(ctx):
-    """盘中速报 — 实时指数 + 资金流向 + 行业轮动（无持仓，适合公开分享）"""
+    """盘中速报 — 实时指数 + 资金流向 + 行业轮动"""
     fmt = ctx.obj["fmt"]
     verbose = ctx.obj.get("verbose", False)
 

@@ -41,7 +41,7 @@ def collect_am_data(verbose=False):
 @click.command("am")
 @click.pass_context
 def am_cmd(ctx):
-    """盘前速览 — 隔夜外盘 + 今日预判（无持仓，适合公开分享）"""
+    """盘前速览 — 隔夜外盘 + 今日预判"""
     fmt = ctx.obj["fmt"]
     verbose = ctx.obj.get("verbose", False)
 

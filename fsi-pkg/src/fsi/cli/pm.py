@@ -140,7 +140,7 @@ def collect_pm_data(db_path=None, verbose=False):
 @click.command("pm")
 @click.pass_context
 def pm_cmd(ctx):
-    """盘后复盘 — 全日总结 + 资金全景 + 明日展望（无持仓，适合公开分享）"""
+    """盘后复盘 — 全日总结 + 资金全景 + 明日展望"""
     fmt = ctx.obj["fmt"]
     verbose = ctx.obj.get("verbose", False)
 

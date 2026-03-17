@@ -22,7 +22,7 @@ from fsi.ai.prompts import STOCK_ANALYSIS_SYSTEM_PROMPT, build_user_message
 @click.option("--days", "-d", default=60, help="分析天数")
 @click.pass_context
 def report(ctx, code, days):
-    """生成综合分析报告（供 Agent 消费）"""
+    """生成综合分析报告（技术面 + 新闻 + 财报）"""
     conn = get_connection(ctx.obj["db"])
     fmt = ctx.obj["fmt"]
     engine = IndicatorEngine()
