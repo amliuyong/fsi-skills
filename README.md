@@ -173,25 +173,44 @@ fsi-skills/
 
 FSI 的 AI 分析功能（技术面点评、新闻情感分析、综合报告等）通过 **Amazon Bedrock** 调用 Claude 模型。
 
-### AWS Profile 配置
+### 第一步：配置 AWS Profile
 
-1. 确保已安装并配置 [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)：
+安装并配置 [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)，创建一个有 Bedrock 权限的 named profile：
 
 ```bash
-# 配置一个 named profile（示例名 my_bedrock）
 aws configure --profile my_bedrock
-# 输入 Access Key、Secret Key、Region（如 us-east-1 或 ap-northeast-1）
+# 输入 Access Key、Secret Key、Region（推荐 us-east-1 或 ap-northeast-1）
 ```
 
-2. 确保该 profile 有 Bedrock 的 `InvokeModel` 权限，并已在对应 region 开通 Claude 模型访问。
+确保该 profile 有 Bedrock 的 `InvokeModel` 权限，并已在对应 region [开通 Claude 模型访问](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html)。
 
-### 自定义配置（可选）
+### 第二步：创建 aws-config.json
 
-创建 `~/.fsi/aws-config.json` 可自定义模型和 profile：
+创建 `~/.fsi/aws-config.json`，告诉 FSI 使用哪个 profile 和模型：
 
 ```json
 {
-  "model": "anthropic.claude-sonnet-4-20250514",
+  "model": "global.anthropic.claude-opus-4-6-v1",
+  "max_tokens": 8192,
+  "profiles": [
+    {"profile_name": "my_bedrock", "region": "us-east-1"}
+  ]
+}
+```
+
+> **这一步是必须的**，否则 AI 分析功能无法工作。
+
+| 字段 | 说明 |
+|------|------|
+| `model` | Bedrock 模型 ID，如 `global.anthropic.claude-opus-4-6-v1`、`anthropic.claude-sonnet-4-20250514` 等 |
+| `max_tokens` | 最大输出 token，默认 `8192` |
+| `profiles` | AWS named profile + region 列表，可配多个，FSI 会随机选择 + 失败自动重试 |
+
+配置多个 profile 可提高可用性（一个 region 限流时自动切换到另一个）：
+
+```json
+{
+  "model": "global.anthropic.claude-opus-4-6-v1",
   "max_tokens": 8192,
   "profiles": [
     {"profile_name": "my_bedrock", "region": "us-east-1"},
@@ -199,14 +218,6 @@ aws configure --profile my_bedrock
   ]
 }
 ```
-
-| 字段 | 默认值 | 说明 |
-|------|--------|------|
-| `model` | `global.anthropic.claude-opus-4-6-v1` | Bedrock 模型 ID |
-| `max_tokens` | `8192` | 最大输出 token |
-| `profiles` | 内置多 profile | AWS named profile + region 列表，随机选择 + 失败重试 |
-
-> **不配置 aws-config.json 也可以使用**，脚本会使用内置默认 profile。如果默认 profile 不匹配你的 AWS 环境，创建此文件覆盖即可。
 
 ## License
 
