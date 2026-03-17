@@ -26,66 +26,39 @@
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 - 网络连接（用于拉取行情数据）
 
-## 一键安装
+## 安装
+
+一行命令，无需 git clone，无残留文件：
 
 ```bash
-git clone https://github.com/amliuyong/fsi-skills.git
-cd fsi-skills
-bash install.sh
+curl -sSL https://raw.githubusercontent.com/amliuyong/fsi-skills/main/install.sh | bash
 ```
 
-`install.sh` 会自动：
-1. 创建 Python 虚拟环境（`.venv/`）
-2. 从本地 `fsi-pkg/` 安装 FSI 及所有依赖
-3. 交互式选择安装位置（全局 or 当前项目）
-4. 复制所有 skills 并记录 venv 路径
+脚本会自动：
+1. 从 GitHub 下载所需文件到临时目录
+2. 创建 Python 虚拟环境（`~/.fsi/venv/`）
+3. 安装 FSI 及所有依赖
+4. 交互式选择安装位置 → 复制 skills
+5. 清理临时文件，不留任何残留
 
 安装时会提示选择：
 
 ```
 请选择 Skills 安装位置：
-  1) 全局安装 → ~/.claude/skills/（所有项目共享，复制文件）
-  2) 项目安装 → 指定项目目录 .claude/skills/（仅该项目，symlink）
-
-# 选择 2 后会询问项目路径（默认 .. 即上级目录）
-请输入项目路径 [默认 ..（上级目录）]: /path/to/my-project
+  1) 全局安装 → ~/.claude/skills/（所有项目共享）
+  2) 项目安装 → 指定项目目录 .claude/skills/（仅该项目）
 ```
 
-| 选项 | 安装位置 | 方式 | 作用范围 |
-|------|----------|------|----------|
-| 1 | `~/.claude/skills/` | 复制文件 | 全局，所有项目共享 |
-| 2 | `<项目>/.claude/skills/` | symlink | 仅该项目，修改实时生效 |
-
-> **典型用法**：在项目目录下 clone 后安装，选 2 并回车（默认上级目录）：
-> ```bash
-> cd my-project
-> git clone https://github.com/amliuyong/fsi-skills.git
-> cd fsi-skills && bash install.sh
-> # 选 2，回车 → skills 安装到 my-project/.claude/skills/
-> ```
-
-> **提示**：如果使用 SSH 方式克隆，可替换为：
-> ```bash
-> git clone git@github.com:amliuyong/fsi-skills.git
-> ```
-
-### 安装单个 skill
-
-```bash
-# 先安装 FSI
-pip install ./fsi-pkg
-
-# 复制到全局
-cp -r skills/fsi-chart ~/.claude/skills/
-
-# 或 symlink 到项目
-ln -s "$(pwd)/skills/fsi-chart" .claude/skills/fsi-chart
-```
+| 选项 | 安装位置 | 作用范围 |
+|------|----------|----------|
+| 1 | `~/.claude/skills/` | 全局，所有项目共享 |
+| 2 | `<项目>/.claude/skills/` | 仅该项目可用 |
 
 ### 验证安装
 
 ```bash
-# 确认 fsi 命令可用
+# 确认 fsi 命令可用（需先激活 venv）
+source ~/.fsi/venv/bin/activate
 fsi --help
 
 # 确认 skills 已就位
