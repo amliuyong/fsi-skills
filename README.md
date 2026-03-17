@@ -44,14 +44,25 @@ bash install.sh
 
 ```
 请选择 Skills 安装位置：
-  1) 全局安装 → ~/.claude/skills/（所有项目共享）
-  2) 项目安装 → 当前目录 .claude/skills/（仅当前项目）
+  1) 全局安装 → ~/.claude/skills/（所有项目共享，复制文件）
+  2) 项目安装 → 指定项目目录 .claude/skills/（仅该项目，symlink）
+
+# 选择 2 后会询问项目路径（默认 .. 即上级目录）
+请输入项目路径 [默认 ..（上级目录）]: /path/to/my-project
 ```
 
 | 选项 | 安装位置 | 方式 | 作用范围 |
 |------|----------|------|----------|
 | 1 | `~/.claude/skills/` | 复制文件 | 全局，所有项目共享 |
-| 2 | `.claude/skills/` | symlink | 仅当前项目，修改实时生效 |
+| 2 | `<项目>/.claude/skills/` | symlink | 仅该项目，修改实时生效 |
+
+> **典型用法**：在项目目录下 clone 后安装，选 2 并回车（默认上级目录）：
+> ```bash
+> cd my-project
+> git clone https://github.com/amliuyong/fsi-skills.git
+> cd fsi-skills && bash install.sh
+> # 选 2，回车 → skills 安装到 my-project/.claude/skills/
+> ```
 
 > **提示**：如果使用 SSH 方式克隆，可替换为：
 > ```bash

@@ -16,13 +16,19 @@ error() { echo -e "\033[1;31m[ERROR]\033[0m $*"; exit 1; }
 echo ""
 echo "请选择 Skills 安装位置："
 echo "  1) 全局安装 → ~/.claude/skills/（所有项目共享，复制文件）"
-echo "  2) 项目安装 → 当前目录 .claude/skills/（仅当前项目，symlink）"
+echo "  2) 项目安装 → 指定项目目录 .claude/skills/（仅该项目，symlink）"
 echo ""
 read -rp "请输入 1 或 2 [默认 1]: " choice
 INSTALL_MODE="${choice:-1}"
 case "$INSTALL_MODE" in
     1) SKILLS_DIR="$HOME/.claude/skills" ;;
-    2) SKILLS_DIR="$(pwd)/.claude/skills" ;;
+    2)
+        read -rp "请输入项目路径 [默认 ..（上级目录）]: " project_path
+        project_path="${project_path:-..}"
+        # 转为绝对路径
+        project_path="$(cd "$project_path" 2>/dev/null && pwd)" || error "路径不存在：$project_path"
+        SKILLS_DIR="$project_path/.claude/skills"
+        ;;
     *) error "无效选择：$INSTALL_MODE" ;;
 esac
 
