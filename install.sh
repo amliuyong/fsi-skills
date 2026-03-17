@@ -19,6 +19,15 @@ for cmd in python3 python; do
 done
 [ -z "$PYTHON" ] && error "未找到 Python3"
 
+# ─── 检查 Python 版本 ───
+PY_VERSION=$($PYTHON -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+PY_MAJOR=$($PYTHON -c 'import sys; print(sys.version_info.major)')
+PY_MINOR=$($PYTHON -c 'import sys; print(sys.version_info.minor)')
+if [ "$PY_MAJOR" -lt 3 ] || { [ "$PY_MAJOR" -eq 3 ] && [ "$PY_MINOR" -lt 11 ]; }; then
+    error "需要 Python >= 3.11，当前为 $PY_VERSION"
+fi
+info "Python $PY_VERSION"
+
 # ─── 创建 venv + 安装 FSI ───
 info "创建 venv → $VENV_DIR"
 $PYTHON -m venv "$VENV_DIR"

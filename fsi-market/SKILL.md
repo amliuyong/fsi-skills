@@ -9,7 +9,7 @@ A 股市场全时段覆盖：盘前、盘中、盘后、热点新闻、历史回
 
 ## 前置条件
 
-- 已安装 FSI（`pip install fsi`），`fsi` 命令在 PATH 中可用
+- 已通过 `install.sh` 安装 FSI，`fsi` 命令可用（脚本会自动从 bundled fsi-pkg 安装）
 - 需要网络连接（实时数据）
 
 ## 用法

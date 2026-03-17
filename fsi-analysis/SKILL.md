@@ -13,7 +13,7 @@ A 股查询与分析工具集，覆盖技术指标、综合报告、多股对比
 
 ## 前置条件
 
-- 已安装 FSI（`pip install fsi`），`fsi` 命令在 PATH 中可用
+- 已通过 `install.sh` 安装 FSI，`fsi` 命令可用（脚本会自动从 bundled fsi-pkg 安装）
 - 已拉取相关股票数据（可配合 fsi-fetch skill）
 
 ## 用法

@@ -12,7 +12,7 @@ description: >-
 
 ## 前置条件
 
-- 已安装 FSI（`pip install fsi`），`fsi` 命令在 PATH 中可用
+- 已通过 `install.sh` 安装 FSI，`fsi` 命令可用（脚本会自动从 bundled fsi-pkg 安装）
 - 已拉取相关证券数据
 
 ## 用法
