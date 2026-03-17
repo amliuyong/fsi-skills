@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# FSI Skills 一键安装
+# 1. 在 repo 内创建 .venv 并安装 FSI
+# 2. 复制 skills 到 ~/.claude/skills/
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+VENV_DIR="$SCRIPT_DIR/.venv"
+SKILLS_DIR="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
+
+info()  { echo -e "\033[1;34m[INFO]\033[0m $*"; }
+ok()    { echo -e "\033[1;32m[OK]\033[0m $*"; }
+error() { echo -e "\033[1;31m[ERROR]\033[0m $*"; exit 1; }
+
+# ─── Python ───
+PYTHON=""
+for cmd in python3 python; do
+    command -v "$cmd" &>/dev/null && PYTHON="$cmd" && break
+done
+[ -z "$PYTHON" ] && error "未找到 Python3"
+
+# ─── 创建 venv + 安装 FSI ───
+info "创建 venv → $VENV_DIR"
+$PYTHON -m venv "$VENV_DIR"
+source "$VENV_DIR/bin/activate"
+
+info "安装 FSI（从 fsi-pkg/）..."
+pip install -q "$SCRIPT_DIR/fsi-pkg" || error "FSI 安装失败"
+ok "FSI 安装完成: $(which fsi)"
+
+# ─── 安装 Skills ───
+info "安装 Skills → $SKILLS_DIR"
+mkdir -p "$SKILLS_DIR"
+
+count=0
+for skill_dir in "$SCRIPT_DIR"/fsi-*/; do
+    [ ! -f "$skill_dir/SKILL.md" ] && continue
+    skill_name="$(basename "$skill_dir")"
+    cp -r "$skill_dir" "$SKILLS_DIR/"
+    chmod +x "$SKILLS_DIR/$skill_name"/scripts/*.py 2>/dev/null || true
+    ok "  $skill_name"
+    count=$((count + 1))
+done
+ok "$count 个 skills 已安装"
+
+# ─── 写入 venv 路径供脚本使用 ───
+echo "$VENV_DIR" > "$SKILLS_DIR/.fsi-venv-path"
+ok "venv 路径已记录: $SKILLS_DIR/.fsi-venv-path"
+
+echo ""
+ok "完成！在 Claude Code 中试试："
+echo "  > 帮我看看 000001 的技术指标"
+echo "  > 今天大盘怎么样？"
+echo ""
